@@ -1,0 +1,25 @@
+<project name="what3words" default="all">
+
+    <property file="ant.properties"/>
+
+    <target name="make_dir">
+        <mkdir dir="${build_dir}"/>
+    </target>
+
+    <target name="compile" depends="make_dir">
+        <javac destdir="${build_dir}" classpath="${extlib}">
+            <src path="src"/>
+            <include name="${entry_point}.java"/>
+        </javac>
+    </target>
+
+    <target name="make_jar" depends="compile">
+        <jar destfile="${jar_name}" basedir="${build_dir}" manifest="${manifest}"/>
+    </target>
+
+    <target name="all" description="Make distribution" depends="make_jar"/>
+
+    <target name="clean" description="Delete output folder">
+        <delete dir="${build_dir}"/>
+    </target>
+</project>
