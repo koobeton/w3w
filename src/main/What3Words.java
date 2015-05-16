@@ -1,24 +1,34 @@
 package main;
 
+import static main.ApiMethod.*;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class What3Words {
 
-    private static final String URL = "http://api.what3words.com";
+    private static final String W3W_URL = "http://api.what3words.com";
     private static final String API_KEY_FILE = "api.key";
 
     private final String apiKey;
 
-    private What3Words() {
+    public What3Words() {
         apiKey = getApiKey(API_KEY_FILE);
     }
 
     public static void main(String... args) {
 
         What3Words w3w = new What3Words();
-        System.out.println(w3w.get3Words(args[0]));
+        System.out.println(w3w.getPosition(args[0]));
+    }
+
+    public String getPosition(String threeWords) {
+        return getJson(W3W, threeWords);
+    }
+
+    public String get3Words(String position) {
+        return getJson(POSITION, position);
     }
 
     private String getApiKey(String file) {
@@ -34,13 +44,16 @@ public class What3Words {
         return apiKey;
     }
 
-    private String getURL () {
-        return String.format("%s/w3w?key=%s&string=",
-                URL,
-                apiKey);
+    private String getURL(ApiMethod method, String query) {
+        return String.format("%s/%s?key=%s&%s=%s",
+                W3W_URL,
+                method.getPath(),
+                apiKey,
+                method.getParameter(),
+                query);
     }
 
-    private String get3Words(String string) {
+    private String getJson(ApiMethod method, String query) {
 
         StringBuilder result = new StringBuilder();
         URL url;
@@ -48,7 +61,7 @@ public class What3Words {
         BufferedReader reader = null;
 
         try {
-            url = new URL(getURL() + string);
+            url = new URL(getURL(method, query));
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             String input;
