@@ -20,4 +20,4 @@ Convert 3 words to position:
 
 Convert position to 3 words:
 
-    java -jar w3w.jar position1 position2
+    java -jar w3w.jar latitude longitude

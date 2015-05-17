@@ -1,8 +1,9 @@
 package main;
 
-import static main.ApiMethod.*;
+import static main.W3WApiMethod.*;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -12,7 +13,8 @@ public class What3Words {
     private static final String API_KEY_FILE = "api.key";
 
     private static String threeWords;
-    private static String position;
+    private static BigDecimal latitude;
+    private static BigDecimal longitude;
 
     private final String apiKey;
 
@@ -25,16 +27,21 @@ public class What3Words {
         handleArgs(args);
 
         What3Words w3w = new What3Words();
-        System.out.println(w3w.getPosition(threeWords));
-        System.out.println(w3w.get3Words(position));
+        if (threeWords != null) {
+            System.out.println(w3w.getPosition(threeWords));
+        } else if (latitude != null && longitude != null) {
+            System.out.println(w3w.get3Words(latitude, longitude));
+        } else {
+            showUsage();
+        }
     }
 
     private String getPosition(String threeWords) {
-        return getJson(getURL(W3W, threeWords));
+        return getJson(buildURLString(W3W, threeWords));
     }
 
-    private String get3Words(String position) {
-        return getJson(getURL(POSITION, position));
+    private String get3Words(BigDecimal latitude, BigDecimal longitude) {
+        return getJson(buildURLString(POSITION, String.format("%s,%s", latitude, longitude)));
     }
 
     private String getApiKey(String file) {
@@ -50,7 +57,7 @@ public class What3Words {
         return apiKey;
     }
 
-    private String getURL(ApiMethod method, String query) {
+    private String buildURLString(W3WApiMethod method, String query) {
         return String.format("%s/%s?key=%s&%s=%s",
                 W3W_URL,
                 method.getPath(),
@@ -95,7 +102,8 @@ public class What3Words {
                 threeWords = String.format("%s.%s.%s", args[0], args[1], args[2]);
                 break;
             case 2:
-                position = String.format("%s,%s", args[0], args[1]);
+                latitude = new BigDecimal(args[0].replace(',', '.'));
+                longitude = new BigDecimal(args[1].replace(',', '.'));
                 break;
             default:
                 showUsage();

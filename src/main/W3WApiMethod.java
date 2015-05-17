@@ -1,13 +1,13 @@
 package main;
 
-enum ApiMethod {
+enum W3WApiMethod {
 
     W3W("string"),
     POSITION("position");
 
     private String parameter;
 
-    ApiMethod(String parameter) {
+    W3WApiMethod(String parameter) {
         this.parameter = parameter;
     }
 
