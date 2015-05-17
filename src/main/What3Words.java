@@ -11,6 +11,9 @@ public class What3Words {
     private static final String W3W_URL = "http://api.what3words.com";
     private static final String API_KEY_FILE = "api.key";
 
+    private static String threeWords;
+    private static String position;
+
     private final String apiKey;
 
     public What3Words() {
@@ -19,16 +22,19 @@ public class What3Words {
 
     public static void main(String... args) {
 
+        handleArgs(args);
+
         What3Words w3w = new What3Words();
-        System.out.println(w3w.getPosition(args[0]));
+        System.out.println(w3w.getPosition(threeWords));
+        System.out.println(w3w.get3Words(position));
     }
 
     public String getPosition(String threeWords) {
-        return getJson(W3W, threeWords);
+        return getJson(getURL(W3W, threeWords));
     }
 
     public String get3Words(String position) {
-        return getJson(POSITION, position);
+        return getJson(getURL(POSITION, position));
     }
 
     private String getApiKey(String file) {
@@ -53,7 +59,7 @@ public class What3Words {
                 query);
     }
 
-    private String getJson(ApiMethod method, String query) {
+    private String getJson(String urlString) {
 
         StringBuilder result = new StringBuilder();
         URL url;
@@ -61,7 +67,7 @@ public class What3Words {
         BufferedReader reader = null;
 
         try {
-            url = new URL(getURL(method, query));
+            url = new URL(urlString);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             String input;
@@ -81,5 +87,24 @@ public class What3Words {
         }
 
         return result.toString();
+    }
+
+    private static void handleArgs(String... args) {
+        switch (args.length) {
+            case 3:
+                threeWords = String.format("%s.%s.%s", args[0], args[1], args[2]);
+                break;
+            case 2:
+                position = String.format("%s,%s", args[0], args[1]);
+                break;
+            default:
+                showUsage();
+                System.exit(0);
+        }
+    }
+
+    private static void showUsage() {
+        System.out.println("Usage:\tjava -jar w3w.jar word1 word2 word3\n" +
+                "\tjava -jar w3w.jar position1 position2");
     }
 }
