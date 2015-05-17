@@ -16,7 +16,7 @@ public class What3Words {
 
     private final String apiKey;
 
-    public What3Words() {
+    private What3Words() {
         apiKey = getApiKey(API_KEY_FILE);
     }
 
@@ -29,11 +29,11 @@ public class What3Words {
         System.out.println(w3w.get3Words(position));
     }
 
-    public String getPosition(String threeWords) {
+    private String getPosition(String threeWords) {
         return getJson(getURL(W3W, threeWords));
     }
 
-    public String get3Words(String position) {
+    private String get3Words(String position) {
         return getJson(getURL(POSITION, position));
     }
 
