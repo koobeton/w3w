@@ -37,11 +37,17 @@ public class What3Words {
     }
 
     private String getPosition(String threeWords) {
-        return getJson(buildURLString(W3W, threeWords));
+        return is3Words(threeWords) ?
+                getJson(buildURLString(W3W, threeWords)) :
+                String.format("Not a 3 words: %s", threeWords);
     }
 
     private String get3Words(BigDecimal latitude, BigDecimal longitude) {
         return getJson(buildURLString(POSITION, String.format("%s,%s", latitude, longitude)));
+    }
+
+    private boolean is3Words(String words) {
+        return words.matches("^\\p{L}+\\.\\p{L}+\\.\\p{L}+$");
     }
 
     private String getApiKey(String file) {
@@ -113,6 +119,6 @@ public class What3Words {
 
     private static void showUsage() {
         System.out.println("Usage:\tjava -jar w3w.jar word1 word2 word3\n" +
-                "\tjava -jar w3w.jar position1 position2");
+                "\tjava -jar w3w.jar latitude longitude");
     }
 }
