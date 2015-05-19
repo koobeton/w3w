@@ -108,8 +108,14 @@ public class What3Words {
                 threeWords = String.format("%s.%s.%s", args[0], args[1], args[2]);
                 break;
             case 2:
-                latitude = new BigDecimal(args[0].replace(',', '.'));
-                longitude = new BigDecimal(args[1].replace(',', '.'));
+                try {
+                    latitude = new BigDecimal(args[0].replace(',', '.'));
+                    longitude = new BigDecimal(args[1].replace(',', '.'));
+                } catch (NumberFormatException e) {
+                    System.out.println("Wrong number format");
+                    showUsage();
+                    System.exit(0);
+                }
                 break;
             default:
                 showUsage();
