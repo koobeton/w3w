@@ -138,7 +138,7 @@ public class What3Words {
                     error,
                     errorMessage);
         } else {
-            System.out.printf("3 words:\t%s%nLatitude:\t%s%nLongitude:\t%s%n",
+            System.out.printf("3 words:\t%s%nPosition:\t%s, %s%n",
                     threeWords,
                     latitude,
                     longitude);
