@@ -1,1 +1,2 @@
 Main-Class: main.What3Words
+Class-Path: lib/javax.json-1.0.4.jar
